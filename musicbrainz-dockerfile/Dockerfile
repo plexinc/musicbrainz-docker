@@ -18,12 +18,16 @@ RUN apt-get update && \
         libpq-dev \
         libxml2-dev \
         memcached \
+        patch \
         postgresql \
         python-minimal
 
 RUN git clone --recursive https://github.com/metabrainz/musicbrainz-server.git musicbrainz-server && \
     cd musicbrainz-server && \
     git checkout v-2018-08-14
+
+ADD DBDefs.diff /tmp/
+RUN patch -d /musicbrainz-server/lib -o DBDefs.pm DBDefs.pm.sample /tmp/DBDefs.diff
 
 RUN cd musicbrainz-server && \
     cp docker/yarn_pubkey.txt /tmp && \
@@ -54,7 +58,6 @@ RUN eval $( perl -Mlocal::lib) && cpanm --notest \
         Term::Size::Any \
         TURNSTEP/DBD-Pg-3.5.9_1.tar.gz
 
-ADD DBDefs.pm /musicbrainz-server/lib/
 ADD scripts/start.sh /start.sh
 ADD scripts/start_mb_renderer.pl /start_mb_renderer.pl
 ADD scripts/crons.conf /crons.conf

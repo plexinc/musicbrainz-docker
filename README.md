@@ -7,8 +7,8 @@ This repo contains everything needed to run a musicbrainz slave server with sear
 You will need a little over 50 gigs of free space to run this with replication.
 
 ### Versions
-* Current MB Branch: [v-2018-08-14](musicbrainz-dockerfile/Dockerfile#L26)
-* Current DB_SCHEMA_SEQUENCE: [24](musicbrainz-dockerfile/DBDefs.pm#L107)
+* Current MB Branch: [v-2018-08-14](musicbrainz-dockerfile/Dockerfile#L27)
+* Current DB_SCHEMA_SEQUENCE: [24](https://github.com/metabrainz/musicbrainz-server/blob/v-2018-08-14/lib/DBDefs.pm.sample#L112)
 * Postgres Version: [9.5](postgres-dockerfile/Dockerfile#L1)
 
 ### Installation
@@ -59,7 +59,7 @@ When there is a schema change you will need to follow the directions posted by t
 * Checkout the new branch: `git fetch origin && git checkout NEW_SCHEMA_BRANCH`.
 * Run the upgrade script: `./upgrade.sh`.
 * Exit bash `exit`.
-* Set DB_SCHEMA_SEQUENCE to the NEW_SCHEMA_NUM in the [DBDefs.pm file](musicbrainz-dockerfile/DBDefs.pm#L95)
+* Set DB_SCHEMA_SEQUENCE to the NEW_SCHEMA_NUM in the [DBDefs.pm file](https://github.com/metabrainz/musicbrainz-server/blob/v-2018-08-14/lib/DBDefs.pm.sample#L112)
 * `sudo docker-compose stop musicbrainz` then `sudo docker-compose build musicbrainz` then `sudo docker-compose up -d --no-deps musicbrainz`
 
 If anything doesn't work create an issue and submit a pull request.
