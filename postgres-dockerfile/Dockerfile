@@ -1,5 +1,5 @@
 ARG POSTGRES_VERSION=9.5
-FROM postgres:${POSTGRES_VERSION}
+FROM postgres:9.5
 LABEL Author="jeffsturgis@gmail.com"
 
 ARG DEBIAN_FRONTEND="noninteractive"
