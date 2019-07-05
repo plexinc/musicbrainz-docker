@@ -1,9 +1,11 @@
 version: '3'
 
 volumes:
+  mqdata:
+    driver: local
   pgdata:
     driver: local
-  indexdata:
+  solrdata:
     driver: local
   dbdump:
     driver: local
@@ -29,7 +31,7 @@ services:
       args:
         - POSTGRES_VERSION=${POSTGRES_VERSION:-9.5}
     ports:
-      - "5000:5000"
+      - "${MUSICBRAINZ_WEB_SERVER_PORT:-5000}:5000"
     volumes:
       - dbdump:/media/dbdump
     restart: unless-stopped
@@ -37,25 +39,38 @@ services:
       - ./postgres-dockerfile/postgres.env
     environment:
       - MUSICBRAINZ_USE_PROXY=1
+      - MUSICBRAINZ_WEB_SERVER_HOST=${MUSICBRAINZ_WEB_SERVER_HOST:-localhost}
+      - MUSICBRAINZ_WEB_SERVER_PORT=${MUSICBRAINZ_WEB_SERVER_PORT:-5000}
     depends_on:
       - db
+      - mq
       - search
       - redis
 
   indexer:
-    build: indexer-dockerfile
+    build: sir-dockerfile
+    env_file:
+      - ./postgres-dockerfile/postgres.env
     depends_on:
       - db
-    volumes:
-      - indexdata:/home/search/indexdata
+      - mq
+      - search
 
   search:
-    build: search-dockerfile
+    build: solr-dockerfile
     restart: unless-stopped
-    ports:
-      - "8080:8080"
+    expose:
+      - "8983"
     volumes:
-      - indexdata:/home/search/indexdata
+      - solrdata:/opt/solr/server/solr/data
+
+  mq:
+    build: rabbitmq-dockerfile
+    restart: unless-stopped
+    volumes:
+      - mqdata:/var/lib/rabbitmq
+    expose:
+      - "5672"
 
   redis:
     image: redis:3-alpine

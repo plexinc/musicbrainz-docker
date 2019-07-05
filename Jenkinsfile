@@ -22,7 +22,7 @@ node('plex-linux-x86_64') {
       tools.paasBuildandPushImage(
         repo: repo,
         dockerImageTag: "indexer-${branch}-${gitHash}",
-        dockerFileDir: "indexer-dockerfile"
+        dockerFileDir: "sir-dockerfile"
       )
     }
     stage('Build and push musicbrainz db') {
@@ -36,7 +36,14 @@ node('plex-linux-x86_64') {
       tools.paasBuildandPushImage(
         repo: repo,
         dockerImageTag: "search-${branch}-${gitHash}",
-        dockerFileDir: "search-dockerfile"
+        dockerFileDir: "solr-dockerfile"
+      )
+    }
+    stage('Build and push musicbrainz rabbitMQ') {
+      tools.paasBuildandPushImage(
+        repo: repo,
+        dockerImageTag: "rabbitmq-${branch}-${gitHash}",
+        dockerFileDir: "rabbitmq-dockerfile"
       )
     }
   }

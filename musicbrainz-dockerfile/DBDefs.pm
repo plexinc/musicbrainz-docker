@@ -124,7 +124,7 @@ sub DB_SCHEMA_SEQUENCE { 25 }
 #               choose RT_SLAVE, as well as the usual READWRITE.
 # * RT_STANDALONE - This server neither generates nor uses replication
 #               packets.  Changes to the database are allowed.
-sub REPLICATION_TYPE { RT_SLAVE }
+sub REPLICATION_TYPE { shift->DEVELOPMENT_SERVER() ? RT_STANDALONE : RT_SLAVE }
 
 # If you plan to use the RT_SLAVE setting (replicated data from MusicBrainz' Live Data Feed)
 # you must sign in at https://metabrainz.org and generate an access token to access
@@ -160,11 +160,11 @@ sub REPLICATION_ACCESS_TOKEN { "" }
 # Additionally you should set the environment variable
 # MUSICBRAINZ_USE_PROXY=1 when using a reverse proxy to make the server
 # aware of it when generating things like the canonical url in catalyst.
-sub WEB_SERVER                { "localhost:5000" }
+sub WEB_SERVER                { "$ENV{MUSICBRAINZ_WEB_SERVER_HOST}:$ENV{MUSICBRAINZ_WEB_SERVER_HOST}" }
 # Relevant only if SSL redirects are enabled
 # sub WEB_SERVER_SSL            { "localhost" }
-sub SEARCH_SERVER             { "search:8080" }
-sub SEARCH_ENGINE             { "LUCENE" }
+sub SEARCH_SERVER             { "search:8983/solr" }
+sub SEARCH_ENGINE             { "SOLR" }
 # Used, for example, to have emails sent from the beta server list the
 # main server
 # sub WEB_SERVER_USED_IN_EMAIL  { my $self = shift; $self->WEB_SERVER }
@@ -379,12 +379,12 @@ sub DATASTORE_REDIS_ARGS {
 
 # sub USE_ETAGS { 1 }
 
-sub CATALYST_DEBUG { 0 }
+sub CATALYST_DEBUG { shift->DEVELOPMENT_SERVER() ? 1 : 0 }
 
 # If you are developing on MusicBrainz, you should set this to a true value
 # This will turn off some optimizations (such as CSS/JS compression) to make
 # developing and debuging easier
-sub DEVELOPMENT_SERVER { 0 }
+sub DEVELOPMENT_SERVER { $ENV{DEVELOPMENT_MUSICBRAINZ_DOCKER} == 1 ? 1 : 0 }
 
 # How long to wait before rechecking template files (undef uses the
 # Template::Toolkit default)
@@ -393,7 +393,10 @@ sub DEVELOPMENT_SERVER { 0 }
 # Please activate the officially approved languages here. Not every .po
 # file is active because we might have fully translated languages which
 # are not yet properly supported, like right-to-left languages
-sub MB_LANGUAGES { qw( de fr nl en ) }
+sub MB_LANGUAGES { shift->DEVELOPMENT_SERVER()
+    ? qw( de el es-es et fi fr it ja nl en )
+    : qw( de fr nl en )
+}
 
 # Should the site fall back to browser settings when trying to set a language
 # (note: will still only use languages in MB_LANGUAGES)
