@@ -1,4 +1,4 @@
-@Library('plextools@cookandy/fix-paasBuildandPushImage2') import tv.plex.PlexTools
+@Library('plextools@cookandy/fix-paasBuildandPushImage') import tv.plex.PlexTools
 
 def tools = new PlexTools(this)
 
