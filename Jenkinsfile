@@ -1,7 +1,7 @@
 @Library('plextools') import tv.plex.PlexTools
 
 def tools = new PlexTools(this)
-
+def dockerImage = 'plex/build-ops:latest'
 def repo = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
 
 tools.dockerNode(dockerImage, "xsmall") {
