@@ -4,13 +4,12 @@ def tools = new PlexTools(this)
 
 def repo = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
 
-node('plex-linux-x86_64') {
-  tools.uniqueWS(project: repo) {
-    stage('Checkout') {
-      gitInfo = checkout(tools.checkout_obj())
-      gitHash = gitInfo.get('GIT_COMMIT')[0..6]
-      branch = tools.get_branch_name()
-    }
+tools.dockerNode(dockerImage, "xsmall") {
+
+    def gitInfo = checkout(tools.checkout_obj())
+    def gitHash = gitInfo.get('GIT_COMMIT')[0..6]
+    def branch = tools.get_branch_name()
+
     stage('Build and push musicbrainz server') {
       tools.paasBuildandPushImage(
         repo: repo,
@@ -46,5 +45,4 @@ node('plex-linux-x86_64') {
         dockerFileDir: "rabbitmq-dockerfile"
       )
     }
-  }
 }
