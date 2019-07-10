@@ -6,11 +6,6 @@ def repo = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\
 
 node('plex-linux-x86_64') {
   tools.uniqueWS(project: repo) {
-    stage('Checkout') {
-      gitInfo = checkout(tools.checkout_obj())
-      gitHash = gitInfo.get('GIT_COMMIT')[0..6]
-      branch = tools.get_branch_name()
-    }
     stage('Build and push musicbrainz server') {
       tools.paasBuildandPushImage(
         repo: repo,
