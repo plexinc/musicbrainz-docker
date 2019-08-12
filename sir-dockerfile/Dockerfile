@@ -28,7 +28,7 @@ RUN apt-get update && \
 # Installing sir #
 ##################
 
-ARG SIR_VERSION=1.0.0
+ARG SIR_VERSION=1.0.1
 
 LABEL org.metabrainz.sir.version="${SIR_VERSION}"
 
