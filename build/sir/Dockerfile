@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION=2.7
-FROM metabrainz/python:${PYTHON_VERSION}
+FROM metabrainz/python:2.7
 
 ARG PYTHON_VERSION
 
