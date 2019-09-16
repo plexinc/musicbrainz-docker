@@ -1,9 +1,0 @@
-version: '3'
-
-services:
-  indexer:
-    entrypoint:
-      - python
-      - -m
-      - sir
-      - amqp_watch
