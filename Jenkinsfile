@@ -17,34 +17,34 @@ stage('Build and push musicbrainz server') {
   tools.paasBuildandPushImage(
     repo: repo,
     dockerImageTag: "server-${branch}-${gitHash}",
-    dockerFileDir: "musicbrainz-dockerfile"
+    dockerFileDir: "build/musicbrainz"
   )
 }
 stage('Build and push musicbrainz indexer') {
   tools.paasBuildandPushImage(
     repo: repo,
     dockerImageTag: "indexer-${branch}-${gitHash}",
-    dockerFileDir: "sir-dockerfile"
+    dockerFileDir: "build/sir"
   )
 }
 stage('Build and push musicbrainz db') {
   tools.paasBuildandPushImage(
     repo: repo,
     dockerImageTag: "db-${branch}-${gitHash}",
-    dockerFileDir: "postgres-dockerfile"
+    dockerFileDir: "build/postgres"
   )
 }
 stage('Build and push musicbrainz search') {
   tools.paasBuildandPushImage(
     repo: repo,
     dockerImageTag: "search-${branch}-${gitHash}",
-    dockerFileDir: "solr-dockerfile"
+    dockerFileDir: "build/solr"
   )
 }
 stage('Build and push musicbrainz rabbitMQ') {
   tools.paasBuildandPushImage(
     repo: repo,
     dockerImageTag: "rabbitmq-${branch}-${gitHash}",
-    dockerFileDir: "rabbitmq-dockerfile"
+    dockerFileDir: "build/rabbitmq"
   )
 }
