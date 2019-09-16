@@ -29,7 +29,7 @@ RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 RUN git clone https://github.com/metabrainz/musicbrainz-server.git musicbrainz-server && \
     cd musicbrainz-server && \
-    git checkout v-2019-05-13-schema-change
+    git checkout v-2019-08-08
 
 RUN cd musicbrainz-server && \
     cp docker/yarn_pubkey.txt /tmp && \
@@ -69,15 +69,16 @@ RUN apt-get install -y wget
 ARG POSTGRES_USER=doesntmatteraslongasyoudontcompiletests
 ARG POSTGRES_PASSWORD=doesntmatteraslongasyoudontcompiletests
 
-ENV DEVELOPMENT_MUSICBRAINZ_DOCKER 0
-ENV POSTGRES_USER musicbrainz
-ENV POSTGRES_PASSWORD musicbrainz
+ENV DEVELOPMENT_MUSICBRAINZ_DOCKER=0 \
+    MUSICBRAINZ_WEB_SERVER_HOST=localhost \
+    MUSICBRAINZ_WEB_SERVER_PORT=5000 \
+    POSTGRES_USER=musicbrainz \
+    POSTGRES_PASSWORD=musicbrainz
 
 RUN cd /musicbrainz-server/ && yarn install --production && \
     eval $( perl -Mlocal::lib) && /musicbrainz-server/script/compile_resources.sh
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN crontab /crons.conf
 
 VOLUME  ["/media/dbdump"]
 WORKDIR /musicbrainz-server

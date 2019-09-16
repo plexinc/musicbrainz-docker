@@ -131,7 +131,13 @@ sub REPLICATION_TYPE { shift->DEVELOPMENT_SERVER() ? RT_STANDALONE : RT_SLAVE }
 # the replication packets. Enter the access token below:
 # NOTE: DO NOT EXPOSE THIS ACCESS TOKEN PUBLICLY!
 #
-sub REPLICATION_ACCESS_TOKEN { "" }
+sub REPLICATION_ACCESS_TOKEN {
+    my $file = '/run/secrets/metabrainz_access_token';
+    open(my $fh, '<', $file) or return '';
+    read($fh, my $token, 40) or $token = '';
+    close $fh;
+    return $token;
+}
 
 ################################################################################
 # GPG Signature
@@ -160,7 +166,7 @@ sub REPLICATION_ACCESS_TOKEN { "" }
 # Additionally you should set the environment variable
 # MUSICBRAINZ_USE_PROXY=1 when using a reverse proxy to make the server
 # aware of it when generating things like the canonical url in catalyst.
-sub WEB_SERVER                { "$ENV{MUSICBRAINZ_WEB_SERVER_HOST}:$ENV{MUSICBRAINZ_WEB_SERVER_HOST}" }
+sub WEB_SERVER                { "$ENV{MUSICBRAINZ_WEB_SERVER_HOST}:$ENV{MUSICBRAINZ_WEB_SERVER_PORT}" }
 # Relevant only if SSL redirects are enabled
 # sub WEB_SERVER_SSL            { "localhost" }
 sub SEARCH_SERVER             { "search:8983/solr" }
